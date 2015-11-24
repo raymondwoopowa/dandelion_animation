@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Animation for iOS</title>
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+	background: #000;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#transform {
+	margin: auto;
+	-moz-transform: scale(0.5);
+	-webkit-transform: scale(0.5);
+	transform: scale(0.5);
+	margin-top: -280px;
+}
+#app {
+	background: #0c7279;
+	width: 640px;
+	height: 1136px;
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+#bagFront {
+	position: absolute;
+	display: block;
+	left: 0px;
+	bottom: 0px;
+	z-index: 9999999;
+	/*opacity: 0.5;*/
+}
+#bagBack {
+	position: absolute;
+	display: block;
+	left: 0px;
+	bottom: 0px;
+	z-index: 1;
+}
+#sprite1,
+#sprite2,
+#sprite3,
+#sprite4,
+#sprite5,
+#sprite6,
+#sprite7 {
+	position: absolute;
+	display: block;
+	left: 220px;
+	bottom: 30px;
+	z-index: 10;
+	display: none;
+}
+
+</style>
+<link href="sprite.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="jquery.transform2d.js"></script>
+</head>
+
+<body>
+<!--<p id="printArea" style="color:white;">000</p>-->
+<div id="transform">
+  <div id="app">
+  	<img id="sprite1" src="POS-06.png" />
+  	<img id="sprite2" src="POS-07.png" />
+  	<img id="sprite3" src="POS-08.png" />
+  	<img id="sprite4" src="POS-09.png" />
+  	<img id="sprite5" src="POS-10.png" />
+  	<img id="sprite6" src="POS-11.png" />
+  	<img id="sprite7" src="POS-12.png" />
+  	<img id="bagBack" src="bagBack.png" />
+  	<img id="bagFront" src="bagFront.png" />
+  </div>
+</div>
+</body>
+
+<script>
+
+	var n=1;
+	var last=1
+	
+	function randomAnimation () {
+		//alert("#sprite"+n);
+		
+		var randomItem=Math.floor(Math.random()*7)+1
+		while (randomItem == last) {
+			randomItem=Math.floor(Math.random()*7)+1;
+		}
+		last=randomItem;
+		
+		var newSprite=$("#sprite"+randomItem).eq(0).clone(); //clone
+		var randomTimeout=Math.random()*700+500;
+		var randomLeft=Math.random()*400+50;
+		var randomZ=Math.random()*10+1;
+		var randomRotation=Math.random()*40-20;
+		//$("#printArea").html(randomItem);
+		
+		$("#app").append(newSprite);
+		newSprite.css({"bottom":"1150px","left":randomLeft,"z-index":randomZ,"transform": "rotate("+randomRotation+"deg)"});
+		newSprite.show();
+		newSprite.animate({"bottom": "30px","left": "210px","transform": "rotate(0deg)"}, 5000, "easeOutQuad", function() {
+    		newSprite.remove(); // Animation complete
+			$("#bagFront, #bagBack").animate({"bottom": "-2px"}, 100, function() {
+				$("#bagFront, #bagBack").css("bottom","0px"); // Animation complete
+			});
+ 		});
+		n++;
+		if(n==6){n=1};
+		
+		setTimeout(function() {
+        	randomAnimation();
+		}, randomTimeout );
+	};
+	
+	randomAnimation();
+	
+</script>
+
+</html>
